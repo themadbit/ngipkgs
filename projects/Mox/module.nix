@@ -48,8 +48,8 @@
     systemd.services.mox-setup = {
       description = "Setup Mox Mail Server Configuration Files";
       wantedBy = [ "multi-user.target" ];
-      requires = [ "network-online.target" ];
-      after = [ "network-online.target" ];
+      requires = [ "network-online.target" "unbound.service" ];
+      after = [ "network-online.target" "unbound.service" ];
       before = [ "mox.service" ];
       serviceConfig = {
         Type = "oneshot";

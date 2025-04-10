@@ -17,27 +17,24 @@
         ];
 
         # Allow necessary ports through the firewall
-        networking.firewall.allowedTCPPorts = [ 25 80 143 443 587 993 ];
+        networking.firewall.allowedTCPPorts = [ 25 80 143 443 587 993 5335 ];
         networking.firewall.allowedUDPPorts = [ 53 ];
-
+        networking.nameservers = [ "127.0.0.1" ];
+        environment.etc."resolv.conf".text = ''
+          nameserver 127.0.0.1
+        '';
         services.unbound = {
           enable = true;
+          resolveLocalQueries = true;
+          enableRootTrustAnchor = false;
           settings = {
             server = {
               interface = [ "127.0.0.1" ];
+              access-control = [ "127.0.0.1/8 allow" "::1/128 allow" ];
             };
-            forward-zone = [
-              {
-                name = ".";
-                forward-addr = [
-                  "9.9.9.9#dns.quad9.net"
-                  "149.112.112.112#dns.quad9.net"
-                ];
-                forward-tls-upstream = true;
-              }
-            ];
+            local-zone = [ "\"example.com.\" static" ];
+            local-data = [ "\"example.com. IN A 12.34.56.78\"" "\"mail.example.com. IN A 78.56.34.12\"" ];
           };
-          enableRootTrustAnchor = true;
         };
       };
   };
