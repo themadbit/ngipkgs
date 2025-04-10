@@ -6,8 +6,8 @@
 {
   metadata = {
     summary = ''
-    Mox is a modern, secure, and open-source email server that implements all modern email protocols.
-    It makes it easy for people and organizations to run their own email server in minutes using mox quickstart.
+      Mox is a modern, secure, and open-source email server that implements all modern email protocols.
+      It makes it easy for people and organizations to run their own email server in minutes using mox quickstart.
     '';
     subgrants = [
       "Mox"

@@ -48,8 +48,14 @@
     systemd.services.mox-setup = {
       description = "Setup Mox Mail Server Configuration Files";
       wantedBy = [ "multi-user.target" ];
-      requires = [ "network-online.target" "unbound.service" ];
-      after = [ "network-online.target" "unbound.service" ];
+      requires = [
+        "network-online.target"
+        "unbound.service"
+      ];
+      after = [
+        "network-online.target"
+        "unbound.service"
+      ];
       before = [ "mox.service" ];
       serviceConfig = {
         Type = "oneshot";
@@ -58,9 +64,9 @@
         Group = "mox";
       };
       script = ''
-      mkdir -p /var/lib/mox
-      cd /var/lib/mox
-      ${pkgs.mox}/bin/mox quickstart -hostname ${config.services.mox.hostname} ${config.services.mox.user}
+        mkdir -p /var/lib/mox
+        cd /var/lib/mox
+        ${pkgs.mox}/bin/mox quickstart -hostname ${config.services.mox.hostname} ${config.services.mox.user}
       '';
     };
 
