@@ -23,6 +23,9 @@
         environment.etc."resolv.conf".text = ''
           nameserver 127.0.0.1
         '';
+        networking.hosts = {
+          "127.0.0.1" = [ "com." "mail.example.com" "example.com" ];
+        };
         services.unbound = {
           enable = true;
           resolveLocalQueries = true;
@@ -32,8 +35,16 @@
               interface = [ "127.0.0.1" ];
               access-control = [ "127.0.0.1/8 allow" "::1/128 allow" ];
             };
-            local-zone = [ "\"example.com.\" static" ];
-            local-data = [ "\"example.com. IN A 12.34.56.78\"" "\"mail.example.com. IN A 78.56.34.12\"" ];
+            local-zone = [
+              "\"example.com.\" transparent"
+              "\"com.\" redirect"  # Added to handle queries for com.
+            ];
+            local-data = [
+              "\"example.com. IN A 12.34.56.78\""
+              "\"mail.example.com. IN A 127.0.0.1\""
+              "\"com. IN NS localhost\""  # Provide a static response for com.
+              "\"localhost. IN A 127.0.0.1\""
+            ];
           };
         };
       };
