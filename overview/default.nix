@@ -185,7 +185,9 @@ let
     examples = rec {
       one = example: ''
         <details><summary>${example.description}</summary>
-
+        ${optionalString (lib.any (test: test.module == null) (lib.attrValues example.tests)) ''
+          <button class="button example"><a class = "heading" href="https://github.com/ngi-nix/ngipkgs/blob/main/CONTRIBUTING.md">Add example test</a></button>
+        ''}
         ${render.codeSnippet.one { filename = example.module; }}
 
         </details>
@@ -478,7 +480,7 @@ let
         <meta property="og:title" content="${args.pagetitle}" />
         ${optionalString (
           args.summary != null
-        ) "<meta property=\"og:description\" content=\"${args.summary}\" />"}
+        ) ''<meta property="og:description" content="${args.summary}" />''}
         <meta property="og:url" content="https://ngi.nixos.org/${path}" />
         <meta property="og:type" content="website" />
         <link rel="stylesheet" href="/style.css">
@@ -545,21 +547,19 @@ let
       python3 ${./render-template.py} '${htmlFile path page}' "$out/${path}/index.html"
     '';
 
-  fonts =
-    pkgs.runCommand "fonts"
-      {
-        nativeBuildInputs = with pkgs; [ woff2 ];
-      }
-      ''
-        mkdir -vp $out
-        cp -v ${pkgs.ibm-plex}/share/fonts/opentype/IBMPlex{Sans,Mono}-* $out/
-        for otf in $out/*.otf; do
-          woff2_compress "$otf"
-        done
-      '';
+  fonts = pkgs.runCommand "fonts" { nativeBuildInputs = with pkgs; [ woff2 ]; } ''
+    mkdir -vp $out
+    cp -v ${pkgs.ibm-plex}/share/fonts/opentype/IBMPlex{Sans,Mono}-* $out/
+    for otf in $out/*.otf; do
+      woff2_compress "$otf"
+    done
+  '';
 
   highlightingCss =
-    pkgs.runCommand "pygments-css-rules.css" { nativeBuildInputs = [ pkgs.python3Packages.pygments ]; }
+    pkgs.runCommand "pygments-css-rules.css"
+      {
+        nativeBuildInputs = [ pkgs.python3Packages.pygments ];
+      }
       ''
         pygmentize -S default -f html -a .code > $out
       '';
