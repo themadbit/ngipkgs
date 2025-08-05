@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PagedJS CLI Test Document</title>
+  <style>
+    /* Page setup */
+    @page {
+      size: A4;
+      margin: 2cm;
+
+      @top-left {
+        content: "PagedJS Test";
+        font-size: 12px;
+        color: #666;
+      }
+
+      @top-right {
+        content: "Page " counter(page) " of " counter(pages);
+        font-size: 12px;
+        color: #666;
+      }
+
+      @bottom-center {
+        content: "Generated with PagedJS CLI";
+        font-size: 10px;
+        color: #999;
+      }
+    }
+
+    /* First page specific styling */
+    @page :first {
+      @top-left {
+        content: none;
+      }
+
+      @top-right {
+        content: none;
+      }
+    }
+
+    /* Chapter pages */
+    @page chapter {
+      @top-left {
+        content: "Chapter " counter(chapter);
+        font-weight: bold;
+      }
+    }
+
+    /* Base typography */
+    body {
+      font-family: 'Georgia', serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Title page */
+    .title-page {
+      page-break-after: always;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 80vh;
+    }
+
+    .title {
+      font-size: 3em;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      color: #2c3e50;
+    }
+
+    .subtitle {
+      font-size: 1.5em;
+      color: #7f8c8d;
+      margin-bottom: 2em;
+    }
+
+    .author {
+      font-size: 1.2em;
+      color: #34495e;
+    }
+
+    /* Table of Contents */
+    .toc {
+      page-break-after: always;
+    }
+
+    .toc h2 {
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 0.5em;
+    }
+
+    .toc-entry {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.5em 0;
+      border-bottom: 1px dotted #bdc3c7;
+      padding-bottom: 0.25em;
+    }
+
+    .toc-title {
+      flex: 1;
+    }
+
+    .toc-page {
+      margin-left: 1em;
+      font-weight: bold;
+    }
+
+    /* Chapter styling */
+    .chapter {
+      page: chapter;
+      page-break-before: always;
+      counter-increment: chapter;
+    }
+
+    .chapter h1 {
+      font-size: 2.5em;
+      color: #2c3e50;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 0.3em;
+      margin-bottom: 1em;
+    }
+
+    .chapter h1::before {
+      content: "Chapter " counter(chapter) ": ";
+      color: #3498db;
+    }
+
+    /* Text formatting */
+    p {
+      text-align: justify;
+      margin-bottom: 1em;
+    }
+
+    .highlight {
+      background-color: #fff3cd;
+      padding: 1em;
+      border-left: 4px solid #ffc107;
+      margin: 1em 0;
+    }
+
+    .code-block {
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      padding: 1em;
+      font-family: 'Courier New', monospace;
+      margin: 1em 0;
+      overflow-x: auto;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1em 0;
+    }
+
+    th,
+    td {
+      border: 1px solid #dee2e6;
+      padding: 0.75em;
+      text-align: left;
+    }
+
+    th {
+      background-color: #e9ecef;
+      font-weight: bold;
+    }
+
+    /* Lists */
+    ul,
+    ol {
+      margin: 1em 0;
+      padding-left: 2em;
+    }
+
+    li {
+      margin-bottom: 0.5em;
+    }
+
+    /* Avoid breaks */
+    .keep-together {
+      page-break-inside: avoid;
+    }
+
+    /* Float figures */
+    .figure {
+      border: 1px solid #dee2e6;
+      padding: 1em;
+      margin: 1em 0;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .figure-caption {
+      font-style: italic;
+      color: #6c757d;
+      margin-top: 0.5em;
+    }
+
+    /* Footnotes */
+    .footnote {
+      font-size: 0.9em;
+      color: #6c757d;
+      border-top: 1px solid #dee2e6;
+      padding-top: 0.5em;
+      margin-top: 2em;
+    }
+
+    /* Print-specific adjustments */
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Title Page -->
+  <div class="title-page">
+    <h1 class="title">PagedJS CLI Test Document</h1>
+    <p class="subtitle">A Comprehensive Test for PDF Generation</p>
+    <p class="author">Generated for Testing Purposes</p>
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <div class="toc-entry">
+      <span class="toc-title">Introduction</span>
+      <span class="toc-page">3</span>
+    </div>
+    <div class="toc-entry">
+      <span class="toc-title">Typography and Text Formatting</span>
+      <span class="toc-page">4</span>
+    </div>
+    <div class="toc-entry">
+      <span class="toc-title">Tables and Data</span>
+      <span class="toc-page">5</span>
+    </div>
+    <div class="toc-entry">
+      <span class="toc-title">Code Examples</span>
+      <span class="toc-page">6</span>
+    </div>
+    <div class="toc-entry">
+      <span class="toc-title">Conclusion</span>
+      <span class="toc-page">7</span>
+    </div>
+  </div>
+
+  <!-- Chapter 1 -->
+  <div class="chapter">
+    <h1>Introduction</h1>
+    <p>This document serves as a comprehensive test file for PagedJS CLI, demonstrating various features and
+      capabilities of the paged media CSS specification. PagedJS is a powerful library that enables the creation of
+      print-ready documents from HTML and CSS.</p>
+
+    <div class="highlight">
+      <strong>Key Features Tested:</strong> This document tests page headers and footers, page breaks, chapter
+      numbering, table of contents, typography, tables, code blocks, and various CSS print features.
+    </div>
+
+    <p>The document is structured to showcase different elements that are commonly used in print publications, including
+      academic papers, technical documentation, and books. Each section demonstrates specific PagedJS capabilities.</p>
+
+    <h2>Document Structure</h2>
+    <p>The document follows a logical structure with a title page, table of contents, and multiple chapters. This
+      organization helps test pagination features and ensures that page breaks occur at appropriate locations.</p>
+
+    <ul>
+      <li>Title page with centered content</li>
+      <li>Table of contents with page references</li>
+      <li>Multiple chapters with automatic numbering</li>
+      <li>Various content types and formatting</li>
+    </ul>
+  </div>
+
+  <!-- Chapter 2 -->
+  <div class="chapter">
+    <h1>Typography and Text Formatting</h1>
+    <p>This chapter demonstrates various typography features and text formatting options available when generating PDFs
+      with PagedJS CLI.</p>
+
+    <h2>Paragraph Formatting</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat.</p>
+
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+      sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+    <h2>Lists and Enumerations</h2>
+    <p>Both ordered and unordered lists are properly formatted:</p>
+
+    <h3>Unordered List</h3>
+    <ul>
+      <li>First item with sufficient text to demonstrate line wrapping and proper indentation</li>
+      <li>Second item</li>
+      <li>Third item with <strong>bold text</strong> and <em>italic text</em></li>
+    </ul>
+
+    <h3>Ordered List</h3>
+    <ol>
+      <li>First numbered item</li>
+      <li>Second numbered item with more content to show how longer items are handled</li>
+      <li>Third numbered item</li>
+    </ol>
+
+    <div class="keep-together">
+      <h2>Special Text Blocks</h2>
+      <p>This section demonstrates highlighted text blocks and special formatting.</p>
+
+      <div class="highlight">
+        This is a highlighted text block that should stand out from regular paragraphs. It uses a different background
+        color and border to draw attention to important information.
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter 3 -->
+  <div class="chapter">
+    <h1>Tables and Data</h1>
+    <p>Tables are essential for presenting structured data in documents. This chapter demonstrates table formatting and
+      styling.</p>
+
+    <div class="figure">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Supported</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Page Headers</td>
+            <td>✓ Yes</td>
+            <td>Customizable content in page margins</td>
+          </tr>
+          <tr>
+            <td>Page Footers</td>
+            <td>✓ Yes</td>
+            <td>Page numbers and custom content</td>
+          </tr>
+          <tr>
+            <td>Chapter Breaks</td>
+            <td>✓ Yes</td>
+            <td>Automatic page breaks before chapters</td>
+          </tr>
+          <tr>
+            <td>Table of Contents</td>
+            <td>⚠ Manual</td>
+            <td>Requires manual page number updates</td>
+          </tr>
+          <tr>
+            <td>Cross References</td>
+            <td>⚠ Limited</td>
+            <td>Basic support available</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="figure-caption">Table 1: PagedJS Feature Support Matrix</div>
+    </div>
+
+    <h2>Data Presentation</h2>
+    <p>The table above demonstrates how structured data can be presented in a clear, readable format. Tables
+      automatically handle page breaks when content extends beyond a single page.</p>
+
+    <h3>Performance Metrics</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Unit</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Processing Time</td>
+          <td>2.3</td>
+          <td>seconds</td>
+          <td>Good</td>
+        </tr>
+        <tr>
+          <td>Memory Usage</td>
+          <td>145</td>
+          <td>MB</td>
+          <td>Acceptable</td>
+        </tr>
+        <tr>
+          <td>Output Size</td>
+          <td>1.2</td>
+          <td>MB</td>
+          <td>Optimal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Chapter 4 -->
+  <div class="chapter">
+    <h1>Code Examples</h1>
+    <p>Technical documents often require code examples. This chapter demonstrates how code blocks are formatted and
+      displayed.</p>
+
+    <h2>HTML Example</h2>
+    <div class="code-block">
+      &lt;!DOCTYPE html&gt;
+      &lt;html lang="en"&gt;
+      &lt;head&gt;
+      &lt;meta charset="UTF-8"&gt;
+      &lt;title&gt;PagedJS Example&lt;/title&gt;
+      &lt;style&gt;
+      @page {
+      size: A4;
+      margin: 2cm;
+      }
+      &lt;/style&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+      &lt;h1&gt;Hello, PagedJS!&lt;/h1&gt;
+      &lt;/body&gt;
+      &lt;/html&gt;
+    </div>
+
+    <h2>CSS Example</h2>
+    <div class="code-block">
+      /* Page setup for print */
+      @page {
+      size: A4 portrait;
+      margin: 2.5cm 2cm;
+
+      @top-center {
+      content: "Document Title";
+      font-size: 12px;
+      }
+
+      @bottom-right {
+      content: "Page " counter(page);
+      font-size: 10px;
+      }
+      }
+
+      /* Chapter styling */
+      .chapter {
+      page-break-before: always;
+      counter-increment: chapter;
+      }
+
+      .chapter h1::before {
+      content: "Chapter " counter(chapter) ": ";
+      }
+    </div>
+
+    <h2>JavaScript Example</h2>
+    <div class="code-block">
+      // PagedJS CLI usage example
+      const { exec } = require('child_process');
+
+      function generatePDF(inputFile, outputFile) {
+      const command = `pagedjs-cli ${inputFile} -o ${outputFile}`;
+
+      exec(command, (error, stdout, stderr) => {
+      if (error) {
+      console.error(`Error: ${error}`);
+      return;
+      }
+      console.log(`PDF generated: ${outputFile}`);
+      });
+      }
+
+      // Usage
+      generatePDF('test.html', 'output.pdf');
+    </div>
+
+    <div class="footnote">
+      <strong>Note:</strong> Code blocks maintain their formatting and are prevented from breaking across pages when
+      possible.
+    </div>
+  </div>
+
+  <!-- Chapter 5 -->
+  <div class="chapter">
+    <h1>Conclusion</h1>
+    <p>This test document demonstrates the key features and capabilities of PagedJS CLI for generating high-quality PDF
+      documents from HTML and CSS. The library provides excellent support for print-specific features that are essential
+      for professional document production.</p>
+
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>PagedJS CLI effectively handles page breaks and pagination</li>
+      <li>Headers and footers can be customized with dynamic content</li>
+      <li>Tables and figures are properly formatted for print</li>
+      <li>Code blocks maintain readability and formatting</li>
+      <li>Typography and spacing translate well to PDF format</li>
+    </ul>
+
+    <h2>Recommendations</h2>
+    <p>When using PagedJS CLI for document generation:</p>
+    <ol>
+      <li>Test your CSS thoroughly with the specific content you'll be using</li>
+      <li>Pay attention to page break behavior with different content types</li>
+      <li>Use the <code>page-break-inside: avoid</code> property for content that should stay together</li>
+      <li>Consider using custom page types for different sections of your document</li>
+    </ol>
+
+    <div class="highlight">
+      <strong>Final Note:</strong> This document serves as both a test file and a reference for implementing similar
+      layouts in your own projects. The CSS styles can be adapted and extended based on your specific requirements.
+    </div>
+
+    <p>For more information about PagedJS and its capabilities, refer to the official documentation and community
+      resources.</p>
+  </div>
+</body>
+
+</html>
