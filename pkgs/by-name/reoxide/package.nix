@@ -9,6 +9,7 @@
   cppzmq,
   libclang,
   libllvm,
+  ghidra,
 }:
 python3.pkgs.buildPythonApplication rec {
   pname = "reoxide";
@@ -69,6 +70,20 @@ python3.pkgs.buildPythonApplication rec {
     else:
         exit(1)
     EOF
+
+  '';
+
+  postFixup = ''
+    # Patch ghidra decompiler path to use reoxide decompile binary
+    mkdir -p $out/opt
+    cp -R --no-preserve=mode ${ghidra}/lib/ghidra $out/opt
+    pushd $out/opt/ghidra/Ghidra/Features/Decompiler/os/linux_x86_64
+      mv decompile decompile.orig
+      cp $out/lib/python3.13/site-packages/reoxide/data/bin/decompile .
+    popd
+    chmod +x $out/opt/ghidra/ghidraRun
+    chmod +x $out/opt/ghidra/support/launch.sh
+    ln -s $out/opt/ghidra/ghidraRun $out/bin/reoxided-ghidra
   '';
 
   pythonImportsCheck = [
