@@ -41,7 +41,7 @@
   nixos.modules.services = {
     reoxided = {
       name = "reoxided";
-      module = ./services/reoxide/module.nix;
+      module = ./services/reoxided/module.nix;
       examples."Enable reoxided" = {
         module = ./services/reoxided/examples/basic.nix;
         tests.basic.module = import ./services/reoxided/tests/basic.nix args;
