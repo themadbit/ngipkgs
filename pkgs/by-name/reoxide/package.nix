@@ -13,15 +13,15 @@
 }:
 python3.pkgs.buildPythonApplication rec {
   pname = "reoxide";
-  version = "0.6.1-unstable-2025-08-27";
+  version = "0.6.1-unstable-2025-09-10";
   pyproject = true;
 
   src = fetchFromGitea {
     domain = "codeberg.org";
     owner = "ReOxide";
     repo = "reoxide";
-    rev = "0ba38caa8656aaf109f674c868bff708a7288bb0";
-    hash = "sha256-Pnqr4SuupGk0Fa9d5eJ/zWeJiE9gMxBeHvI2cZV60ew=";
+    rev = "0c42c75c9b820827593ef7349715056635f4633f";
+    hash = "sha256-+Tr1G2tnVycXPCj6feRf+aBQm9jc53wS1VF03mmADC0=";
     nativeBuildInputs = [
       meson
       cacert
