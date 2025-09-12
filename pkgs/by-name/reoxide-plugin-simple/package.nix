@@ -47,6 +47,18 @@ clangStdenv.mkDerivation (finalAttrs: {
     "-Db_ndebug=true"
   ];
 
+  configurePhase = ''
+    runHook preConfigure
+    
+    mkdir -p .config/reoxide
+    touch .config/reoxide/reoxide.toml
+    export HOME=$PWD
+    
+    meson setup --buildtype=release $mesonFlags build
+    
+    runHook postConfigure
+  '';
+
   meta = with lib; {
     description = "Simple plugin template for reoxide";
     homepage = "https://codeberg.org/ReOxide/reoxide";
